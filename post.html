@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Guessing Game</title>
+  <a href="../index.html" style="color: beige; text-decoration: none;">Home Page</a> 
+  <br>
+  <a href="../html/scratch.html" style="color: beige; text-decoration: none;">Scratch</a>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: rgb(18, 18, 41);
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #game-container {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    input[type="number"] {
+      width: 80%;
+      padding: 10px;
+      margin: 15px 0;
+      border: 1px solid #fff;
+      border-radius: 5px;
+      font-size: 16px;
+      color: #333;
+      background-color: #fff;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #feedback {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #f8f8f8;
+      font-weight: bold;
+    }
+
+    #reset {
+      background-color: #ff4d4d;
+      margin-top: 15px;
+    }
+
+    #reset:hover {
+      background-color: #cc0000;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #timer {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Number Guessing Game</h1>
+  <div id="game-container">
+    <p>Guess a number between 1 and 100:</p>
+    <input type="number" id="guess" placeholder="Enter your guess" />
+    <button id="submit">Submit</button>
+    <p id="feedback"></p>
+    <p id="timer">Time Remaining: <span id="time-left">30</span> seconds</p>
+    <button id="reset" class="hidden">Play Again</button>
+  </div>
+
+  <script>
+    // Generate a random number between 1 and 100
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    let attempts = 0;
+    let timeLeft = 30;
+    let timer;
+
+    const feedback = document.getElementById("feedback");
+    const resetButton = document.getElementById("reset");
+    const timeLeftElement = document.getElementById("time-left");
+
+    // Timer countdown
+    function startTimer() {
+      timer = setInterval(() => {
+        timeLeft--;
+        timeLeftElement.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          feedback.textContent = "Time's up! The correct number was " + randomNumber;
+          feedback.style.color = "red";
+          resetButton.classList.remove('hidden');
+        }
+      }, 1000);
+    }
+
+    // Submit button functionality
+    document.getElementById("submit").addEventListener("click", () => {
+      const userGuess = parseInt(document.getElementById("guess").value);
+      attempts++;
+
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+        feedback.textContent = "Please enter a number between 1 and 100.";
+        feedback.style.color = "red";
+      } else if (userGuess < randomNumber) {
+        feedback.textContent = "Too low! Try again.";
+        feedback.style.color = "orange";
+      } else if (userGuess > randomNumber) {
+        feedback.textContent = "Too high! Try again.";
+        feedback.style.color = "orange";
+      } else {
+        feedback.textContent = `Correct! You guessed it in ${attempts} attempts.`;
+        feedback.style.color = "green";
+        clearInterval(timer); // Stop the timer once guessed correctly
+        resetButton.classList.remove('hidden');
+      }
+    });
+
+    // Reset button functionality
+    resetButton.addEventListener("click", () => {
+      location.reload(); // Reload the page
+    });
+
+    startTimer(); // Start the timer when the game starts
+  </script>
+</body>
+</html>
